@@ -1,0 +1,17 @@
+{
+  "groups": [
+    {
+      "name": "my",
+      "type": "com.refresh.controller.NameProperties",
+      "sourceType": "com.refresh.controller.NameProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "my.property",
+      "type": "java.lang.String",
+      "sourceType": "com.refresh.controller.NameProperties"
+    }
+  ],
+  "hints": []
+}
