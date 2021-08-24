@@ -2,13 +2,23 @@
   "groups": [
     {
       "name": "my",
+      "type": "com.refresh.controller.NamePropertiesMap",
+      "sourceType": "com.refresh.controller.NamePropertiesMap"
+    },
+    {
+      "name": "my.value",
       "type": "com.refresh.controller.NameProperties",
       "sourceType": "com.refresh.controller.NameProperties"
     }
   ],
   "properties": [
     {
-      "name": "my.property",
+      "name": "my.value",
+      "type": "java.util.Map<java.lang.String,java.lang.String>",
+      "sourceType": "com.refresh.controller.NamePropertiesMap"
+    },
+    {
+      "name": "my.value.property",
       "type": "java.lang.String",
       "sourceType": "com.refresh.controller.NameProperties"
     }

@@ -19,6 +19,7 @@ import lombok.Cleanup;
 public abstract class ReloadableProperties {
     @Autowired
     protected StandardEnvironment environment;
+
     private long lastModTime = 0L;
     private Path configPath = null;
     private PropertySource<?> appConfigPropertySource = null;
@@ -28,14 +29,14 @@ public abstract class ReloadableProperties {
         System.out.println("reloading");
         MutablePropertySources propertySources = environment.getPropertySources();
         for (PropertySource<?> propertySource : propertySources) {
-            if (propertySource.getName().contains("name")){
+            if (propertySource.getName().contains("name")) {
                 appConfigPropertySource = propertySource;
                 break;
             }
         }
 //        Optional<PropertySource<?>> appConfigPsOp =
 //                StreamSupport.stream(propertySources.spliterator(), false)
-//                        .filter(ps -> ps.getName().matches("^.*applicationConfig.*file:.*$"))
+//                        .filter(ps -> ps.getName().matches("^.*applicationConfig.*:.*$"))
 //                        .findFirst();
 //        if (!appConfigPsOp.isPresent())  {
 //            // this will stop context initialization
@@ -44,34 +45,33 @@ public abstract class ReloadableProperties {
 //        }
 //        appConfigPropertySource = appConfigPsOp.get();
 
-        String filename = appConfigPropertySource.getName();
-        filename = filename
-                .replace("class path resource [", "")
-                .replaceAll("\\]$", "");
+        if (appConfigPropertySource != null) {
+            String filename = appConfigPropertySource.getName();
+            filename = filename
+//                    .replace("applicationConfig: [file:", "")
+                    .replace("class path resource [", "")
+                    .replaceAll("\\]$", "");
 
-        configPath = Paths.get(filename);
-
+            configPath = Paths.get(filename);
+        }
     }
 
-//    @Scheduled(fixedRate=2000)
     public void reload() throws IOException {
         System.out.println("reloading...");
-//        long currentModTs = Files.getLastModifiedTime(configPath).toMillis();
-//        if (currentModTs > lastModTime) {
-//            lastModTime = currentModTs;
-            Properties properties = new Properties();
-            @Cleanup InputStream inputStream = getClass().getClassLoader().getResourceAsStream("name.properties");
-            properties.load(inputStream);
-            environment.getPropertySources()
-                    .replace(
-                            appConfigPropertySource.getName(),
-                            new PropertiesPropertySource(
-                                    appConfigPropertySource.getName(),
-                                    properties
-                            )
-                    );
-            System.out.println("Reloaded.");
-            propertiesReloaded();
+        Properties properties = new Properties();
+//        @Cleanup InputStream inputStream = Files.newInputStream(configPath);
+        @Cleanup InputStream inputStream =getClass().getClassLoader().getResourceAsStream("name.properties");
+        properties.load(inputStream);
+        environment.getPropertySources()
+                .replace(
+                        appConfigPropertySource.getName(),
+                        new PropertiesPropertySource(
+                                appConfigPropertySource.getName(),
+                                properties
+                        )
+                );
+        System.out.println("Reloaded.");
+        propertiesReloaded();
 //        }
     }
 
